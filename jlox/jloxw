@@ -5,8 +5,13 @@ SOURCE_DIR=$PROJECT_DIR/src
 BUILD_DIR=$PROJECT_DIR/build
 
 if [ ! -d "$BUILD_DIR" ]; then
-  mkdir build
+  mkdir $BUILD_DIR
 fi
 
 javac -d $BUILD_DIR $SOURCE_DIR/*.java
-java -classpath $BUILD_DIR jlox.Lox $1
+
+if [ "$1" == "-p" ]; then
+  java -classpath $BUILD_DIR jlox.AstPrinter $2
+else
+  java -classpath $BUILD_DIR jlox.Lox $1
+fi
