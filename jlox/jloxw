@@ -1,17 +1,37 @@
 #!/bin/bash - 
 
 PROJECT_DIR=$(pwd)
+TOOL_SOURCE_DIR=$PROJECT_DIR/tool
+TOOL_BUILD_DIR=$PROJECT_DIR/tool/build
 SOURCE_DIR=$PROJECT_DIR/src
 BUILD_DIR=$PROJECT_DIR/build
 
-if [ ! -d "$BUILD_DIR" ]; then
-  mkdir $BUILD_DIR
-fi
+# Exit on error
+set -e
 
-javac -d $BUILD_DIR $SOURCE_DIR/*.java
+if [ "$1" == "-g" ]; then
+  if [ ! -d "$TOOL_BUILD_DIR" ]; then
+    mkdir $TOOL_BUILD_DIR
+  fi
 
-if [ "$1" == "-p" ]; then
-  java -classpath $BUILD_DIR jlox.AstPrinter $2
+  echo "Generating src/Expr.java"
+  javac -d $TOOL_BUILD_DIR $TOOL_SOURCE_DIR/*.java
+  java -classpath $TOOL_BUILD_DIR jlox.tool.GenerateAst $SOURCE_DIR
+  echo "Generated src/Expr.java successfully"
 else
-  java -classpath $BUILD_DIR jlox.Lox $1
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir $BUILD_DIR
+  fi
+
+  echo "Compiling src/ into build/"
+  javac -d $BUILD_DIR $SOURCE_DIR/*.java
+
+  if [ "$1" == "-p" ]; then
+    echo "Running AstPrinter"
+    java -classpath $BUILD_DIR jlox.AstPrinter $2
+  else
+    echo "Running Lox"
+    java -classpath $BUILD_DIR jlox.Lox $1
+  fi
 fi
+
