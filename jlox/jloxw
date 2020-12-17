@@ -14,10 +14,10 @@ if [ "$1" == "-g" ]; then
     mkdir $TOOL_BUILD_DIR
   fi
 
-  echo "Generating src/Expr.java"
+  echo "Running GenerateAst"
   javac -d $TOOL_BUILD_DIR $TOOL_SOURCE_DIR/*.java
   java -classpath $TOOL_BUILD_DIR jlox.tool.GenerateAst $SOURCE_DIR
-  echo "Generated src/Expr.java successfully"
+  echo "GenerateAst completed successfully"
 else
   if [ ! -d "$BUILD_DIR" ]; then
     mkdir $BUILD_DIR
