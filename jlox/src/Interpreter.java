@@ -39,7 +39,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     try {
       this.environment = environment;
 
-      for (stmt.statement : statements) {
+      for (Stmt statement : statements) {
         execute(statement);
       }
     } finally {
